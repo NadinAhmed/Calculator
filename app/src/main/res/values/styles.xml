@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="numbers_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:backgroundTint">@color/numbers_background</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="operand_button" parent="numbers_button">
+        <item name="android:backgroundTint">@color/operand_background</item>
+    </style>
+</resources>
