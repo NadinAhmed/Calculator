@@ -3,6 +3,8 @@ package com.nadin.calculator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import com.nadin.calculator.databinding.ActivityMainBinding
@@ -29,6 +31,37 @@ class MainActivity : AppCompatActivity() {
                 View.VISIBLE
             } else {
                 View.GONE
+            }
+        }
+
+        viewModel.history.observe(this) {
+            val spinner = binding.spinnerHistory
+            val adapter = ArrayAdapter(
+                this@MainActivity,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, it
+            )
+
+            spinner.adapter = adapter
+            spinner.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+                AdapterView.OnItemClickListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemClick(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                }
             }
         }
         setupKeyClickListeners()

@@ -19,4 +19,7 @@
     <string name="button_right_prances">)</string>
     <string name="button_equal">=</string>
     <string name="button_c">C</string>
+    <string-array name="spinner_history">
+        <item>History</item>
+    </string-array>
 </resources>

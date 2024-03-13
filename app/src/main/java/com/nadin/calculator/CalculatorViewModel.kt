@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import java.util.LinkedList
 import java.util.Queue
 import java.util.Stack
@@ -16,6 +17,10 @@ class CalculatorViewModel : ViewModel() {
     private val _result = MutableLiveData("")
     val result: LiveData<String>
         get() = _result
+
+    private val _history = MutableLiveData<MutableList<String>>()
+    val history: LiveData<List<String>>
+        get() = _history.map { it.toList() }
 
     fun updateArithmeticProcess(keyText: String) {
         _arithmeticProcess.value += keyText
@@ -83,6 +88,8 @@ class CalculatorViewModel : ViewModel() {
         }
         Log.i("Result", calculationStack.peek().toString())
         _result.value = calculationStack.pop().toString()
+        _history.value?.add(_arithmeticProcess.toString())
+        _history.value?.add(" = $_result")
     }
 
     private fun convertArithmeticProcess(arithmeticProcess: String): List<String> {
