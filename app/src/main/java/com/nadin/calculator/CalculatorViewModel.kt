@@ -26,16 +26,18 @@ class CalculatorViewModel : ViewModel() {
         _result.value = ""
     }
 
-    private fun calculateNumbersQueue(): Queue<Char> {
-        val numbersQueue: Queue<Char> = LinkedList()
-        val operatorsStack = Stack<Char>()
-        for (item in _arithmeticProcess.value!!.iterator()) {
-            when (item) {
-                in "123456789" -> numbersQueue.add(item)
+    private fun calculateNumbersQueue(): Queue<String> {
+        val numbersQueue: Queue<String> = LinkedList()
+        val operatorsStack = Stack<String>()
+        val arithmeticProcessList = convertArithmeticProcess(_arithmeticProcess.value!!)
 
-                '(' -> operatorsStack.push(item)
-                ')' -> {
-                    while (operatorsStack.peek() != '(') {
+        for (item in arithmeticProcessList) {
+            when {
+                item.all { it in "0123456789." } -> numbersQueue.add(item)
+
+                item == "(" -> operatorsStack.push(item)
+                item == ")" -> {
+                    while (operatorsStack.peek() != "(") {
                         numbersQueue.add(operatorsStack.pop())
                     }
                     operatorsStack.pop()
@@ -43,7 +45,7 @@ class CalculatorViewModel : ViewModel() {
                 }
 
                 else -> {
-                    if (!operatorsStack.empty() && (operatorsStack.peek() == 'x' || operatorsStack.peek() == '/')) {
+                    if (!operatorsStack.empty() && (operatorsStack.peek() == "x" || operatorsStack.peek() == "/")) {
                         numbersQueue.add(operatorsStack.pop())
                     }
                     operatorsStack.push(item)
@@ -59,27 +61,35 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun calculateResult() {
-        val calculationStack = Stack<Int>()
+        val calculationStack = Stack<Double>()
 
         val numbersQueue = calculateNumbersQueue()
         Log.i("Result Queue", numbersQueue.toString())
 
         while (!numbersQueue.isEmpty()) {
             val item = numbersQueue.poll()
-            if (item!! in "123456789") {
-                calculationStack.push(item.digitToInt())
+            if (item!!.all { it in "0123456789." }) {
+                calculationStack.push(item.toDouble())
             } else {
                 val secondNumber = calculationStack.pop()
                 val firstNumber = calculationStack.pop()
                 when (item) {
-                    '+' -> calculationStack.push((firstNumber + secondNumber))
-                    '-' -> calculationStack.push((firstNumber - secondNumber))
-                    'x' -> calculationStack.push((firstNumber * secondNumber))
-                    '/' -> calculationStack.push((firstNumber / secondNumber))
+                    "+" -> calculationStack.push((firstNumber + secondNumber))
+                    "-" -> calculationStack.push((firstNumber - secondNumber))
+                    "x" -> calculationStack.push((firstNumber * secondNumber))
+                    "/" -> calculationStack.push((firstNumber / secondNumber))
                 }
             }
         }
         Log.i("Result", calculationStack.peek().toString())
         _result.value = calculationStack.pop().toString()
+    }
+
+    private fun convertArithmeticProcess(arithmeticProcess: String): List<String> {
+        val regex = Regex("""([-+x/()]|\d+(\.\d+)?)""")
+        val tokens = regex.findAll(arithmeticProcess).map { it.value }.toList().map { it.trim() }
+            .filter { it.isNotBlank() }
+        Log.i("Result", tokens.toString())
+        return tokens
     }
 }
