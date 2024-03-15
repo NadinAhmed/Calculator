@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             )
 
             spinner.adapter = adapter
-            spinner.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
                 AdapterView.OnItemClickListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -61,7 +61,10 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
+
                 }
+
+
             }
         }
         setupKeyClickListeners()

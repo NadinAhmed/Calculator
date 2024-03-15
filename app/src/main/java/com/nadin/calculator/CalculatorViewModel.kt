@@ -88,8 +88,10 @@ class CalculatorViewModel : ViewModel() {
         }
         Log.i("Result", calculationStack.peek().toString())
         _result.value = calculationStack.pop().toString()
-        _history.value?.add(_arithmeticProcess.toString())
-        _history.value?.add(" = $_result")
+
+        val history = _history.value ?: mutableListOf()
+        history.add("${_arithmeticProcess.value} = ${_result.value}")
+        _history.value = history
     }
 
     private fun convertArithmeticProcess(arithmeticProcess: String): List<String> {
